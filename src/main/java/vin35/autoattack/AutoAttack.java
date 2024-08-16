@@ -83,15 +83,12 @@ public class AutoAttack implements ClientModInitializer {
 			return;
 		}
 
-		if (mc.crosshairTarget == null) {
+		if (mc.crosshairTarget.getType() == HitResult.Type.MISS) {
 			if(AutoAttackConfig.alwaysAttack){
-				mc.interactionManager.interactItem(mc.player, Hand.MAIN_HAND);
+				mc.player.resetLastAttackedTicks();
 				mc.player.swingHand(Hand.MAIN_HAND);
 			}
-			return;
-		}
-
-		if (mc.crosshairTarget.getType() == HitResult.Type.BLOCK && AutoAttackConfig.cleanCut) {
+		} else if (mc.crosshairTarget.getType() == HitResult.Type.BLOCK && AutoAttackConfig.cleanCut) {
 			BlockHitResult blockHit = (BlockHitResult) mc.crosshairTarget;
 			BlockPos blockPos = blockHit.getBlockPos();
 			BlockState blockState = mc.world.getBlockState(blockPos);
