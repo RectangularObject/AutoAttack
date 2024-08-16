@@ -32,7 +32,7 @@ public class GameRenderMixin {
                 BlockState blockState = this.client.world.getBlockState(blockPos);
 
                 if (blockState.getCollisionShape(this.client.world, blockPos).isEmpty() || blockState.getHardness(this.client.world, blockPos) == 0.0F) {
-                    float reach = this.client.interactionManager.getReachDistance();
+                    float reach = (float) (this.client.player.isInCreativeMode() ? 4.5 : 3.0);
                     Vec3d camera = this.client.player.getCameraPosVec(1.0F);
                     Vec3d rotation = this.client.player.getRotationVec(1.0F);
                     Vec3d end = camera.add(rotation.x * reach, rotation.y * reach, rotation.z * reach);

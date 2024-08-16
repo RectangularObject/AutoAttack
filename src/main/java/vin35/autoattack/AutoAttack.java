@@ -97,7 +97,7 @@ public class AutoAttack implements ClientModInitializer {
 			BlockState blockState = mc.world.getBlockState(blockPos);
 
 			if (blockState.getCollisionShape(mc.world, blockPos).isEmpty() || blockState.getHardness(mc.world, blockPos) == 0.0F) {
-				float reach = mc.interactionManager.getReachDistance();
+				float reach = (float) (mc.player.isInCreativeMode() ? 4.5 : 3.0);
 				Vec3d camera = mc.player.getCameraPosVec(1.0F);
 				Vec3d rotation = mc.player.getRotationVec(1.0F);
 				Vec3d end = camera.add(rotation.x * reach, rotation.y * reach, rotation.z * reach);
@@ -122,14 +122,14 @@ public class AutoAttack implements ClientModInitializer {
 			Item item = stack.getItem();
 
 			if (item == Items.BOW && AutoAttackConfig.autoBow) {
-				float progress = BowItem.getPullProgress(stack.getMaxUseTime() - mc.player.getItemUseTimeLeft() - 1);
+				float progress = BowItem.getPullProgress(stack.getMaxUseTime(mc.player) - mc.player.getItemUseTimeLeft() - 1);
 				if (progress >= 1.0F) {
 					mc.interactionManager.stopUsingItem(mc.player);
 				}
 			}
 
 			if (item == Items.CROSSBOW && AutoAttackConfig.autoCrossBow) {
-				float pullTime = CrossbowItem.getPullTime(stack);
+				float pullTime = CrossbowItem.getPullTime(stack, mc.player);
 				float timeLeft = mc.player.getItemUseTimeLeft();
 				float progress = (pullTime - timeLeft) / pullTime;
 				if (progress >= 1.3F) {
@@ -139,7 +139,7 @@ public class AutoAttack implements ClientModInitializer {
 			}
 
 			if (item == Items.TRIDENT && AutoAttackConfig.autoTrident) {
-				float progress = (stack.getMaxUseTime() - mc.player.getItemUseTimeLeft()) / 10.0F;
+				float progress = (stack.getMaxUseTime(mc.player) - mc.player.getItemUseTimeLeft()) / 10.0F;
 				if (progress >= 1.3F) {
 					mc.interactionManager.stopUsingItem(mc.player);
 				}
